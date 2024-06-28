@@ -68,7 +68,7 @@ public class ScalarFunctions {
   /**
    * Reads a geometry object from the WKT format.
    */
-  @ScalarFunction(names = {"stGeomFromText", "ST_geom_from_text"})
+  @ScalarFunction(names = {"stGeomFromText", "ST_geomFromText", "ST_geom_from_text"})
   public static byte[] stGeomFromText(String wkt)
       throws ParseException {
     return GeometrySerializer.serialize(GeometryUtils.GEOMETRY_WKT_READER.read(wkt));
@@ -77,7 +77,7 @@ public class ScalarFunctions {
   /**
    * Reads a geography object from the WKT format.
    */
-  @ScalarFunction(names = {"stGeogFromText", "ST_geog_from_text"})
+  @ScalarFunction(names = {"stGeogFromText", "ST_geogFromText", "ST_geog_from_text"})
   public static byte[] stGeogFromText(String wkt)
       throws ParseException {
     return GeometrySerializer.serialize(GeometryUtils.GEOGRAPHY_WKT_READER.read(wkt));
@@ -86,7 +86,7 @@ public class ScalarFunctions {
   /**
    * Reads a geometry object from the WKB format.
    */
-  @ScalarFunction(names = {"stGeomFromWKB", "ST_geom_from_wkb"})
+  @ScalarFunction(names = {"stGeomFromWKB", "ST_geomFromWKB", "ST_geom_from_WKB"})
   public static byte[] stGeomFromWKB(byte[] wkb)
       throws ParseException {
     return GeometrySerializer.serialize(GeometryUtils.GEOMETRY_WKB_READER.read(wkb));
@@ -95,7 +95,7 @@ public class ScalarFunctions {
   /**
    * Reads a geography object from the WKB format.
    */
-  @ScalarFunction(names = {"stGeogFromWKB", "ST_geog_from_wkb"})
+  @ScalarFunction(names = {"stGeogFromWKB", "ST_geogFromWKB", "ST_geog_from_WKB"})
   public static byte[] stGeogFromWKB(byte[] wkb)
       throws ParseException {
     return GeometrySerializer.serialize(GeometryUtils.GEOGRAPHY_WKB_READER.read(wkb));
@@ -107,7 +107,7 @@ public class ScalarFunctions {
    * @param bytes the serialized geometry object
    * @return the geometry in WKT
    */
-  @ScalarFunction(names = {"stAsText", "ST_as_text"})
+  @ScalarFunction(names = {"stAsText", "ST_asText", "ST_as_text"})
   public static String stAsText(byte[] bytes) {
     return GeometryUtils.WKT_WRITER.write(GeometrySerializer.deserialize(bytes));
   }
@@ -118,7 +118,7 @@ public class ScalarFunctions {
    * @param bytes the serialized geometry object
    * @return the geometry in WKB
    */
-  @ScalarFunction(names = {"stAsBinary", "ST_as_binary"})
+  @ScalarFunction(names = {"stAsBinary", "ST_asBinary", "ST_as_binary"})
   public static byte[] stAsBinary(byte[] bytes) {
     return GeometryUtils.WKB_WRITER.write(GeometrySerializer.deserialize(bytes));
   }
@@ -156,7 +156,7 @@ public class ScalarFunctions {
    * @param resolution H3 index resolution
    * @return the H3 index address
    */
-  @ScalarFunction(names = {"geoToH3", "geo_to_h3"})
+  @ScalarFunction(names = {"geoToH3", "geo_to_H3"})
   public static long geoToH3(double longitude, double latitude, int resolution) {
     return H3Utils.H3_CORE.geoToH3(latitude, longitude, resolution);
   }
@@ -167,7 +167,7 @@ public class ScalarFunctions {
    * @param resolution H3 index resolution
    * @return the H3 index address
    */
-  @ScalarFunction(names = {"geoToH3", "geo_to_h3"})
+  @ScalarFunction(names = {"geoToH3", "geo_to_H3"})
   public static long geoToH3(byte[] geoBytes, int resolution) {
     Geometry geometry = GeometrySerializer.deserialize(geoBytes);
     double latitude = geometry.getCoordinate().y;

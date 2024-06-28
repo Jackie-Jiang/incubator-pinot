@@ -88,9 +88,6 @@ public class PinotQueryRuleSets {
           // aggregate union rule
           CoreRules.AGGREGATE_UNION_AGGREGATE,
 
-          // reduce aggregate functions like AVG, STDDEV_POP etc.
-          CoreRules.AGGREGATE_REDUCE_FUNCTIONS,
-
           // convert CASE-style filtered aggregates into true filtered aggregates
           // put it after AGGREGATE_REDUCE_FUNCTIONS where SUM is converted to SUM0
           CoreRules.AGGREGATE_CASE_TO_FILTER

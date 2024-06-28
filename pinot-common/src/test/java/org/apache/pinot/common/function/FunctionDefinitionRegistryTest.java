@@ -71,21 +71,22 @@ public class FunctionDefinitionRegistryTest {
   @Test
   public void testCalciteFunctionMapAllRegistered() {
     Set<String> registeredCalciteFunctionNameIgnoreCase = new HashSet<>();
-    for (String funcNames : FunctionRegistry.getRegisteredCalciteFunctionNames()) {
+    for (String funcNames : FunctionRegistry.FUNCTION_MAP.keySet()) {
       registeredCalciteFunctionNameIgnoreCase.add(funcNames.toLowerCase());
     }
     for (TransformFunctionType enumType : TransformFunctionType.values()) {
       if (!isIgnored(enumType.getName().toLowerCase())) {
         for (String funcName : enumType.getAlternativeNames()) {
-          assertTrue(registeredCalciteFunctionNameIgnoreCase.contains(funcName.toLowerCase()),
+          assertTrue(FunctionRegistry.contains(FunctionRegistry.canonicalize(funcName)),
               "Unable to find transform function signature for: " + funcName);
         }
       }
     }
     for (FilterKind enumType : FilterKind.values()) {
-      if (!isIgnored(enumType.name().toLowerCase())) {
-        assertTrue(registeredCalciteFunctionNameIgnoreCase.contains(enumType.name().toLowerCase()),
-            "Unable to find filter function signature for: " + enumType.name());
+      String funcName = enumType.name();
+      if (!isIgnored(funcName.toLowerCase())) {
+        assertTrue(FunctionRegistry.contains(FunctionRegistry.canonicalize(funcName)),
+            "Unable to find filter function signature for: " + funcName);
       }
     }
   }
@@ -109,10 +110,10 @@ public class FunctionDefinitionRegistryTest {
 
   @Test
   public void testScalarFunctionNames() {
-    assertNotNull(FunctionRegistry.getFunctionInfo("testFunc1", 2));
-    assertNotNull(FunctionRegistry.getFunctionInfo("testFunc2", 2));
-    assertNull(FunctionRegistry.getFunctionInfo("testScalarFunction", 2));
-    assertNull(FunctionRegistry.getFunctionInfo("testFunc1", 1));
-    assertNull(FunctionRegistry.getFunctionInfo("testFunc2", 1));
+    assertNotNull(FunctionRegistry.lookupFunctionInfo("testfunc1", 2));
+    assertNotNull(FunctionRegistry.lookupFunctionInfo("testfunc2", 2));
+    assertNull(FunctionRegistry.lookupFunctionInfo("testscalarfunction", 2));
+    assertNull(FunctionRegistry.lookupFunctionInfo("testfunc1", 1));
+    assertNull(FunctionRegistry.lookupFunctionInfo("testfunc2", 1));
   }
 }

@@ -53,7 +53,6 @@ import org.apache.calcite.sql.SqlNode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.helix.model.InstanceConfig;
-import org.apache.pinot.calcite.jdbc.CalciteSchemaBuilder;
 import org.apache.pinot.common.Utils;
 import org.apache.pinot.common.exception.QueryException;
 import org.apache.pinot.common.response.ProcessingException;
@@ -69,9 +68,6 @@ import org.apache.pinot.controller.helix.core.PinotHelixResourceManager;
 import org.apache.pinot.core.auth.ManualAuthorization;
 import org.apache.pinot.core.query.executor.sql.SqlQueryExecutor;
 import org.apache.pinot.query.QueryEnvironment;
-import org.apache.pinot.query.catalog.PinotCatalog;
-import org.apache.pinot.query.type.TypeFactory;
-import org.apache.pinot.query.type.TypeSystem;
 import org.apache.pinot.spi.config.table.TableConfig;
 import org.apache.pinot.spi.exception.DatabaseConflictException;
 import org.apache.pinot.spi.utils.CommonConstants;
@@ -212,9 +208,8 @@ public class PinotQueryResource {
       queryOptionsMap.putAll(RequestUtils.getOptionsFromString(queryOptions));
     }
     String database = DatabaseUtils.extractDatabaseFromQueryRequest(queryOptionsMap, httpHeaders);
-    QueryEnvironment queryEnvironment = new QueryEnvironment(new TypeFactory(new TypeSystem()),
-        CalciteSchemaBuilder.asRootSchema(new PinotCatalog(database, _pinotHelixResourceManager.getTableCache()),
-            database), null, null);
+    QueryEnvironment queryEnvironment =
+        new QueryEnvironment(database, _pinotHelixResourceManager.getTableCache(), null);
     List<String> tableNames;
     try {
       tableNames = queryEnvironment.getTableNamesForQuery(query);
@@ -278,9 +273,8 @@ public class PinotQueryResource {
       try {
         // try to compile the query using multi-stage engine and suggest using it if it succeeds.
         LOGGER.info("Trying to compile query {} using multi-stage engine", query);
-        QueryEnvironment queryEnvironment = new QueryEnvironment(new TypeFactory(new TypeSystem()),
-            CalciteSchemaBuilder.asRootSchema(new PinotCatalog(database, _pinotHelixResourceManager.getTableCache()),
-                database), null, null);
+        QueryEnvironment queryEnvironment =
+            new QueryEnvironment(database, _pinotHelixResourceManager.getTableCache(), null);
         queryEnvironment.getTableNamesForQuery(query);
         LOGGER.info("Successfully compiled query using multi-stage engine: {}", query);
         return QueryException.getException(QueryException.SQL_PARSING_ERROR, new Exception(

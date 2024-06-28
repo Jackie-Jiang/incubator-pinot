@@ -241,8 +241,8 @@ public class TransformFunctionFactory {
     typeToImplementation.put(TransformFunctionType.VECTOR_DIMS, VectorDimsTransformFunction.class);
     typeToImplementation.put(TransformFunctionType.VECTOR_NORM, VectorNormTransformFunction.class);
 
-    Map<String, Class<? extends TransformFunction>> registry
-        = new HashMap<>(HashUtil.getHashMapCapacity(typeToImplementation.size()));
+    Map<String, Class<? extends TransformFunction>> registry =
+        new HashMap<>(HashUtil.getHashMapCapacity(typeToImplementation.size()));
     for (Map.Entry<TransformFunctionType, Class<? extends TransformFunction>> entry : typeToImplementation.entrySet()) {
       for (String alias : entry.getKey().getAlternativeNames()) {
         registry.put(canonicalize(alias), entry.getValue());
@@ -295,8 +295,7 @@ public class TransformFunctionFactory {
         // Check if the function is ArrayLiteraltransform function
         if (functionName.equalsIgnoreCase(ArrayLiteralTransformFunction.FUNCTION_NAME)) {
           return queryContext.getOrComputeSharedValue(ArrayLiteralTransformFunction.class,
-              expression.getFunction().getArguments(),
-              ArrayLiteralTransformFunction::new);
+              expression.getFunction().getArguments(), ArrayLiteralTransformFunction::new);
         }
 
         TransformFunction transformFunction;
@@ -310,13 +309,14 @@ public class TransformFunctionFactory {
           }
         } else {
           // Scalar function
-          FunctionInfo functionInfo = FunctionRegistry.getFunctionInfo(functionName, numArguments);
+          String canonicalName = FunctionRegistry.canonicalize(functionName);
+          FunctionInfo functionInfo = FunctionRegistry.lookupFunctionInfo(canonicalName, numArguments);
           if (functionInfo == null) {
-            if (FunctionRegistry.containsFunction(functionName)) {
+            if (FunctionRegistry.contains(canonicalName)) {
               throw new BadQueryRequestException(
-                  String.format("Unsupported function: %s with %d parameters", functionName, numArguments));
+                  String.format("Unsupported function: %s with %d arguments", functionName, numArguments));
             } else {
-              throw new BadQueryRequestException(String.format("Unsupported function: %s not found", functionName));
+              throw new BadQueryRequestException(String.format("Unsupported function: %s", functionName));
             }
           }
           transformFunction = new ScalarTransformFunctionWrapper(functionInfo);
@@ -354,8 +354,8 @@ public class TransformFunctionFactory {
   public static TransformFunction get(ExpressionContext expression, Map<String, DataSource> dataSourceMap) {
     Map<String, ColumnContext> columnContextMap = new HashMap<>(HashUtil.getHashMapCapacity(dataSourceMap.size()));
     dataSourceMap.forEach((k, v) -> columnContextMap.put(k, ColumnContext.fromDataSource(v)));
-    QueryContext dummy = QueryContextConverterUtils.getQueryContext(
-        CalciteSqlParser.compileToPinotQuery("SELECT * from testTable;"));
+    QueryContext dummy =
+        QueryContextConverterUtils.getQueryContext(CalciteSqlParser.compileToPinotQuery("SELECT * from testTable;"));
     return get(expression, columnContextMap, dummy);
   }
 

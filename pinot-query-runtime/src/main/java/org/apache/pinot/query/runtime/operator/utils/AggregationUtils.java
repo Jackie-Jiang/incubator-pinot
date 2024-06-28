@@ -173,21 +173,12 @@ public class AggregationUtils {
     public static final Map<String, Function<DataSchema.ColumnDataType, AggregationUtils.Merger>> MERGERS =
         ImmutableMap.<String, Function<DataSchema.ColumnDataType, AggregationUtils.Merger>>builder()
             .put("SUM", cdt -> AggregationUtils::mergeSum)
-            .put("$SUM", cdt -> AggregationUtils::mergeSum)
             .put("$SUM0", cdt -> AggregationUtils::mergeSum)
             .put("MIN", cdt -> AggregationUtils::mergeMin)
-            .put("$MIN", cdt -> AggregationUtils::mergeMin)
-            .put("$MIN0", cdt -> AggregationUtils::mergeMin)
             .put("MAX", cdt -> AggregationUtils::mergeMax)
-            .put("$MAX", cdt -> AggregationUtils::mergeMax)
-            .put("$MAX0", cdt -> AggregationUtils::mergeMax)
             .put("COUNT", cdt -> new AggregationUtils.MergeCounts())
-            .put("BOOL_AND", cdt -> AggregationUtils::mergeBoolAnd)
-            .put("$BOOL_AND", cdt -> AggregationUtils::mergeBoolAnd)
-            .put("$BOOL_AND0", cdt -> AggregationUtils::mergeBoolAnd)
-            .put("BOOL_OR", cdt -> AggregationUtils::mergeBoolOr)
-            .put("$BOOL_OR", cdt -> AggregationUtils::mergeBoolOr)
-            .put("$BOOL_OR0", cdt -> AggregationUtils::mergeBoolOr)
+            .put("BOOLAND", cdt -> AggregationUtils::mergeBoolAnd)
+            .put("BOOLOR", cdt -> AggregationUtils::mergeBoolOr)
             .build();
     //@formatter:on
 
